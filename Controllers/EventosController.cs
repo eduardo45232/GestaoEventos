@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GestaoEventos.Data;
 using GestaoEventos.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GestaoEventos.Controllers
 {
@@ -20,6 +21,8 @@ namespace GestaoEventos.Controllers
         }
 
         // GET: Eventos
+
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Eventos.Include(e => e.Categoria).Include(e => e.Local);
@@ -46,7 +49,10 @@ namespace GestaoEventos.Controllers
             return View(evento);
         }
 
+        [Authorize(Roles = "Admin")]
+
         // GET: Eventos/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Nome");
@@ -59,6 +65,8 @@ namespace GestaoEventos.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Nome,Data,CategoriaId,LocalId")] Evento evento)
         {
             if (ModelState.IsValid)
@@ -73,6 +81,7 @@ namespace GestaoEventos.Controllers
         }
 
         // GET: Eventos/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -95,6 +104,7 @@ namespace GestaoEventos.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Data,CategoriaId,LocalId")] Evento evento)
         {
             if (id != evento.Id)
@@ -128,6 +138,7 @@ namespace GestaoEventos.Controllers
         }
 
         // GET: Eventos/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -150,6 +161,7 @@ namespace GestaoEventos.Controllers
         // POST: Eventos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var evento = await _context.Eventos.FindAsync(id);

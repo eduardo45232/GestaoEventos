@@ -16,10 +16,12 @@ namespace GestaoEventos.Models
 
         public int CategoriaId { get; set; }
 
-        public Categoria Categoria { get; set; }
+        public Categoria? Categoria { get; set; }
+
+        [Required(ErrorMessage = "Selecione uma Local")]
 
         public int LocalId { get; set; }
 
-        public Local Local { get; set; }
+        public Local? Local { get; set; }
     }
 }
